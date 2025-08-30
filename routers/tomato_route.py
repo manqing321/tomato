@@ -32,7 +32,13 @@ async def read_tomatoes(
         user: UserPublic = Depends(user_token_dependency)
 ):
     try:
-        tomatoes = session.exec(select(Tomato).where(Tomato.user == user.name).offset(offset).limit(limit)).all()
+        tomatoes = session.exec(
+            select(Tomato)
+                .where(Tomato.user == user.name)
+                .order_by(Tomato.id.desc())
+                .offset(offset)
+                .limit(limit)
+        ).all()
         return tomatoes
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
