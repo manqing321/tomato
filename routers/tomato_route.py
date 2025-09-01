@@ -69,6 +69,7 @@ async def update_tomato(
         update_dict = tomato.model_dump(exclude_unset=True)
         for key, val in update_dict.items():
             setattr(db_tomato, key, val)
+        db_tomato.user = user.name
         session.add(db_tomato)
         session.commit()
         session.refresh(db_tomato)
