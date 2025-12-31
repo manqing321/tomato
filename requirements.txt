@@ -1,7 +1,4 @@
 fastapi[standard]
 sqlmodel
 pymysql
-PyJWT
-passlib
-
-
+passlib[bcrypt]

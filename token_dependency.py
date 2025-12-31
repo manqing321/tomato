@@ -8,7 +8,7 @@ from routers.user_route import find_user
 from fastapi.security import OAuth2PasswordBearer
 import jwt
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/user/token/")
 
 
 def get_current_user(token: Annotated[str, Depends(oauth2_scheme)], session: SessionDep) -> UserPublic:
