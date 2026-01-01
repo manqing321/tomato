@@ -93,3 +93,56 @@ async def delete_tomato(tomato_id: int, session: SessionDep, user: UserPublic = 
     except Exception as e:
         session.rollback()
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
+
+@router.get("/stat_name/")
+async def stat_name(session: SessionDep, user: UserPublic = Depends(user_token_dependency)):
+    try:
+        tomatoes = session.exec(
+            select(Tomato)
+                .where(Tomato.user == user.name)
+        ).all()
+        mp = {}
+        for tomato in tomatoes:
+            if tomato.name in mp:
+                mp[tomato.name] += 1
+            else:
+                mp[tomato.name] = 1
+        return mp
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
+
+@router.get("/stat_day/")
+async def stat_day(session: SessionDep, user: UserPublic = Depends(user_token_dependency)):
+    try:
+        tomatoes = session.exec(
+            select(Tomato)
+                .where(Tomato.user == user.name)
+        ).all()
+        mp = {}
+        for tomato in tomatoes:
+            if tomato.starttime.date() in mp:
+                mp[tomato.starttime.date()] += 1
+            else:
+                mp[tomato.starttime.date()] = 1
+        return mp
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
+
+
+@router.get("/stat_month/")
+async def stat_month(session: SessionDep, user: UserPublic = Depends(user_token_dependency)):
+    try:
+        tomatoes = session.exec(
+            select(Tomato)
+                .where(Tomato.user == user.name)
+        ).all()
+        mp = {}
+        for tomato in tomatoes:
+            month = fr'{tomato.starttime.year}-{tomato.starttime.month}'
+            if month in mp:
+                mp[month] += 1
+            else:
+                mp[month] = 1
+        return mp
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
